@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Note</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body class="app-page">
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="brand" href="{% url 'dashboard' %}">Notes</a>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="is-active" href="{% url 'create_note' %}">Create</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content narrow-content">
+        <section class="page-title">
+            <p class="eyebrow">New note</p>
+            <h1>Create Note</h1>
+            <p>Capture the idea now and keep the details easy to find later.</p>
+        </section>
+
+        <form class="card-form" method="POST">
+            {% csrf_token %}
+
+            <div class="form-field">
+                <label for="title">Title</label>
+                <input id="title" type="text" name="title" placeholder="Give your note a clear title" required>
+            </div>
+
+            <div class="form-field">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="8" placeholder="Write your note here..." required></textarea>
+            </div>
+
+            <div class="form-field">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="Personal">Personal</option>
+                    <option value="Study">Study</option>
+                    <option value="Work">Work</option>
+                    <option value="Important">Important</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <a class="button button-secondary" href="{% url 'dashboard' %}">Cancel</a>
+                <button class="button" type="submit">Save Note</button>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

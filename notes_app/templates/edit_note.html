@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Note</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body class="app-page">
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="brand" href="{% url 'dashboard' %}">Notes</a>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'create_note' %}">Create</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content narrow-content">
+        <section class="page-title">
+            <p class="eyebrow">Update note</p>
+            <h1>Edit Note</h1>
+            <p>Refine the title, category, and content without losing your flow.</p>
+        </section>
+
+        <form class="card-form" method="POST">
+            {% csrf_token %}
+
+            <div class="form-field">
+                <label for="title">Title</label>
+                <input id="title" type="text" name="title" value="{{ note.title }}" required>
+            </div>
+
+            <div class="form-field">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="8" required>{{ note.content }}</textarea>
+            </div>
+
+            <div class="form-field">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="Personal" {% if note.category == "Personal" %}selected{% endif %}>Personal</option>
+                    <option value="Study" {% if note.category == "Study" %}selected{% endif %}>Study</option>
+                    <option value="Work" {% if note.category == "Work" %}selected{% endif %}>Work</option>
+                    <option value="Important" {% if note.category == "Important" %}selected{% endif %}>Important</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <a class="button button-secondary" href="{% url 'dashboard' %}">Cancel</a>
+                <button class="button" type="submit">Update Note</button>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body class="app-page">
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="brand" href="{% url 'dashboard' %}">Notes</a>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a class="is-active" href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="dashboard-hero">
+            <div>
+                <p class="eyebrow">Your workspace</p>
+                <h1>My Notes</h1>
+                <p>Find, filter, and polish your notes from one clean dashboard.</p>
+            </div>
+            <a class="button hero-action" href="{% url 'create_note' %}">Create Note</a>
+        </section>
+
+        <section class="toolbar-card" aria-label="Search and filter notes">
+            <form class="search-form" method="GET">
+                <label for="search">Search notes</label>
+                <div class="search-row">
+                    <input id="search" type="text" name="search" placeholder="Search by title..." value="{{ search|default:'' }}">
+                    <button class="button" type="submit">Search</button>
+                </div>
+            </form>
+
+            <ul class="category-list" aria-label="Filter by category">
+                <li><a class="{% if not category %}is-active{% endif %}" href="{% url 'dashboard' %}">All</a></li>
+                <li><a class="{% if category == 'Personal' %}is-active{% endif %}" href="?category=Personal">Personal</a></li>
+                <li><a class="{% if category == 'Study' %}is-active{% endif %}" href="?category=Study">Study</a></li>
+                <li><a class="{% if category == 'Work' %}is-active{% endif %}" href="?category=Work">Work</a></li>
+                <li><a class="{% if category == 'Important' %}is-active{% endif %}" href="?category=Important">Important</a></li>
+            </ul>
+        </section>
+
+        <div class="dashboard-grid">
+            <section class="notes-panel" aria-label="Notes list">
+                {% if notes %}
+                    {% for note in notes %}
+                        <article class="note-card">
+                            <div class="note-header">
+                                <h2>{{ note.title }}</h2>
+                                <span class="badge badge-{{ note.category|lower }}">{{ note.category }}</span>
+                            </div>
+                            <p class="note-content">{{ note.content }}</p>
+                            <div class="note-footer">
+                                <span>Updated {{ note.updated_at|date:"d M Y" }}</span>
+                                <div class="actions">
+                                    <a class="action-link" href="{% url 'edit_note' note.id %}">Edit</a>
+                                    <a class="action-link delete-link" href="{% url 'delete_note' note.id %}" onclick="return confirm('Delete this note?')">Delete</a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <h2>No Notes Found</h2>
+                        <p>Create your first note or try a different search/filter.</p>
+                        <a class="button" href="{% url 'create_note' %}">Create Note</a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <aside class="sidebar">
+                <section class="side-card">
+                    <h3>Recently Updated</h3>
+                    {% if recent_notes %}
+                        <div class="recent-list">
+                            {% for note in recent_notes %}
+                                <div class="recent-item">
+                                    <span>{{ note.title }}</span>
+                                    <small>{{ note.updated_at|date:"d M" }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="muted-text">No recent notes yet.</p>
+                    {% endif %}
+                </section>
+            </aside>
+        </div>
+    </main>
+</body>
+
+</html>
+
